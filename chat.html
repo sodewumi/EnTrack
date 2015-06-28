@@ -23,7 +23,15 @@
 	    	    longitude = position.coords.longitude;
 	    	  };
 
-	    	  console.log("here?" + latitude)
+	    	  // *******************************************
+	    	  //  HELLLLLLLP !
+
+	    	  // we thought by taking out the 'var' above we'd make this a global variable
+	    	  // not the case. How can we get this data and pass it into our database??
+
+	    	  // *******************************************
+
+
 
 	    	  function error() {
 	    	    output.innerHTML = "Unable to retrieve your location";
@@ -32,7 +40,6 @@
 	    	  output.innerHTML = "<p>Locating…</p>";
 	    	  navigator.geolocation.getCurrentPosition(success, error, {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000});
 
-	    	  return latitude
 	    	};
 
 	    	function authDataCallback(authData) {
