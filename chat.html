@@ -69,11 +69,6 @@
 					  navigator.geolocation.getCurrentPosition(success, error, {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000});
 					};
 
-
-
-
-
-
 	    			usersRef.set({
 						username: {
 							name: $("#username").val()
@@ -130,7 +125,7 @@
 		<hr>
 		<p>
 		<input id="username" placeholder="username" type="text">
-		<button id="login">Log in with GitHub</button>
+		<button onclick="geoFindMe()" id="login">Log in with GitHub</button>
 		<button id="logout">Log out</button>
 		</p>
 		<hr>
