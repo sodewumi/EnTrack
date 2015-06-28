@@ -23,7 +23,7 @@
           if (authData) {
             console.log("User" + authData.uid + " is logged in with " + authData.provider);
             $("#logout").show();
-            $("#userHeading").text(authData.uid)
+          
           } else {
             console.log("User is logged out");
             $("#login").show();
@@ -39,7 +39,7 @@
       if (authData) {
         console.log("User " + authData.uid + " is logged in with " + authData.provider);
           $("#logout").show();
-          $("#userHeading").text(authData.uid)
+        
 
       } else {
         console.log("User is logged out");
@@ -52,7 +52,6 @@
             if (error) {
               console.log("Login Failed!", error);
             } else {
-              $("#userHeading").text($("#username").val());
               var usersRef = ref.child("usernames").child(authData.uid);
               console.log("Authenticated successfully with payload:", authData);
               
@@ -77,7 +76,7 @@
                   $("#login").hide();
                   $("#logout").show();
                   $("#message").show();
-                  $("#userHeading").text($("#username").val());
+                 
                 }
               geoFindMe(setData);
 

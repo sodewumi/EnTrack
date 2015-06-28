@@ -195,7 +195,7 @@
             tag: 'sf-muni',
             city: 'San Francisco',
             state: 'CA',
-            name: 'Party Time!',
+            // name: 'Party Time!',
             zoom: 15
           }]
       };
@@ -208,19 +208,22 @@
 
   </head>
   <body >
-    <img id="logo" src="logo.gif">
+    <div id="top">
+        <img id="logo" src="logo.gif">
 
-   <div id="login">
-     <p>
-     <input id="username" placeholder="username" type="text">
-     <button id="login">Log in with GitHub</button>
-     <button id="logout">Log out</button>
-     </p>
- </div>
+       <div id="login">
+         <p>
+         <input id="username" placeholder="username" type="text">
+         <button id="login">Log in with GitHub</button>
+         <button id="logout">Log out</button>
+         </p>
+       </div>
+    </div>
 
     <div class="transit-opendata-example">
       <div class="transit-map-canvas" data-example="transit" id="map-canvas"></div>
       <select id="system-selector"></select>
+       <button id="tracker">Track Me</button> 
     </div>
 
     
@@ -234,6 +237,7 @@
 
     <div id="chat">
       <h2 id="userHeading">
+        Chat
       </h2>
 
       <ul id="chat-buffer">
@@ -247,7 +251,7 @@
       </p>
       <input type="submit" id="submit">
       <div id="out"></div>
-      <button id="tracker">Track Me</button> 
+     
     </div>
 
 
