@@ -1,39 +1,117 @@
-  // function initialize() {
-  //         var mapCanvas = document.getElementById('map-canvas');
-  //         var mapOptions = {
-  //           center: new google.maps.LatLng(37.7833, -122.4167),
-  //           zoom: 12,
-  //           mapTypeId: google.maps.MapTypeId.ROADMAP
-  //         }
-  //         var map = new google.maps.Map(mapCanvas, mapOptions)
-  //       }
-  //       google.maps.event.addDomListener(window, 'load', initialize);
+  $(document).ready(function () {
 
-  function geoFindMe() {
-    var output = document.getElementById("out");
+        $("#logout").hide();
+        $("#message").hide();
 
-    if (!navigator.geolocation){
-      output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
-      return;
-    }
+        function geoFindMe(success) {
+          var output = document.getElementById("out");
 
-    function success(position) {
-      var latitude  = position.coords.latitude;
-      var longitude = position.coords.longitude;
+          if (!navigator.geolocation){
+            output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
+            return;
+          }
+    
+          function error() {
+            output.innerHTML = "Unable to retrieve your location";
+          };
 
-      output.innerHTML = '<p>Latitude is ' + latitude + '° <br>Longitude is ' + longitude + '°</p>';
+          output.innerHTML = "<p>Locating…</p>";
+          navigator.geolocation.getCurrentPosition(success, error, {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000});
+        };
 
-      var img = new Image();
-      img.src = "https://maps.googleapis.com/maps/api/staticmap?center=" + latitude + "," + longitude + "&zoom=13&size=300x300&sensor=false";
+        function authDataCallback(authData) {
+          if (authData) {
+            console.log("User" + authData.uid + " is logged in with " + authData.provider);
+            $("#logout").show();
+            $("#userHeading").text(authData.uid)
+          } else {
+            console.log("User is logged out");
+            $("#login").show();
+          }
+        }
+        
+          var ref = new Firebase("https://entrack.firebaseio.com/");
 
-      output.appendChild(img);
-    };
+          ref.onAuth(authDataCallback);
+          ref.offAuth(authDataCallback);
 
-    function error() {
-      output.innerHTML = "Unable to retrieve your location";
-    };
+          var authData = ref.getAuth();
+      if (authData) {
+        console.log("User " + authData.uid + " is logged in with " + authData.provider);
+          $("#logout").show();
+          $("#userHeading").text(authData.uid)
 
-    output.innerHTML = "<p>Locating…</p>";
+      } else {
+        console.log("User is logged out");
+        $("#login").show();
+        $("#logout").hide();
+      }
 
-    navigator.geolocation.getCurrentPosition(success, error);
-  }
+          $("#login").click(function () {
+            ref.authWithOAuthPopup("github", function(error, authData) {
+            if (error) {
+              console.log("Login Failed!", error);
+            } else {
+              $("#userHeading").text($("#username").val());
+              var usersRef = ref.child("usernames").child(authData.uid);
+              console.log("Authenticated successfully with payload:", authData);
+              
+                function setData(position) {
+
+                    var latitude  = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+                    console.log (latitude, longitude)
+
+                  usersRef.set({
+                  username: {
+                    name: $("#username").val()              
+                  },
+                  location: { 
+                    latitude: latitude,
+                    longitude: longitude
+                  }
+                  
+                });
+
+                $("#username").hide();
+                  $("#login").hide();
+                  $("#logout").show();
+                  $("#message").show();
+                  $("#userHeading").text($("#username").val());
+                }
+              geoFindMe(setData);
+
+          }
+        });
+      });
+
+      $("#logout").click(function () {
+        ref.unauth();
+        $("#login").show();
+        $("#username").text("");
+        $("#username").show();
+        $("#logout").hide();
+      });
+    
+
+          $("#submit").click(function () {
+            var username = $("#username").val();
+            var message = $("#message").val();
+            ref.child("messages").push({
+                username: username,
+                message: message
+            });
+          });
+
+          ref.child("messages").on("child_added", function (snapshot) {
+            var value = snapshot.val();
+            var html = $("<li/>").text(value.username + " said " + value.message);
+            $("#chat-buffer").append(html);
+          });
+
+
+          $("#tracker").click(function(){
+            setInterval(function() {console.log("hello")}, 200);
+
+          })
+      });
