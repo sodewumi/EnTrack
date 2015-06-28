@@ -19,6 +19,7 @@
 
 	    	  function success(position) {
 	    	    latitude  = position.coords.latitude;
+	    	    console.log(latitude);
 	    	    longitude = position.coords.longitude;
 	    	  };
 
@@ -69,7 +70,11 @@
 	    			var usersRef = ref.child("usernames").child(authData.uid);
 	    			console.log("Authenticated successfully with payload:", authData);
 
+	    			
 	    			var lat = geoFindMe();
+	    			console.log("before" + latitude);
+	    			console.log("after" + lat);
+
 
 	    			usersRef.set({
 						username: {
