@@ -28,6 +28,8 @@
 
 	    	  output.innerHTML = "<p>Locating…</p>";
 	    	  navigator.geolocation.getCurrentPosition(success, error, {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000});
+
+	    	  return latitude
 	    	};
 
 	    	function authDataCallback(authData) {
@@ -67,7 +69,7 @@
 	    			var usersRef = ref.child("usernames").child(authData.uid);
 	    			console.log("Authenticated successfully with payload:", authData);
 
-	    			geoFindMe();
+	    			var lat = geoFindMe();
 
 	    			usersRef.set({
 						username: {
@@ -77,8 +79,8 @@
 
 					usersRef.set({
 						location: { 
-							latitude: latitude,
-							longitude: longitude
+							latitude: lat
+							// longitude: longitude
 						}
 						
 					});
