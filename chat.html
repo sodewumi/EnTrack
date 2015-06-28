@@ -17,18 +17,7 @@
 	    	    output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
 	    	    return;
 	    	  }
-	    
-
-	    	  // *******************************************
-	    	  //  HELLLLLLLP !
-
-	    	  // we thought by taking out the 'var' above we'd make this a global variable
-	    	  // not the case. How can we get this data and pass it into our database??
-
-	    	  // *******************************************
-
-
-
+	  
 	    	  function error() {
 	    	    output.innerHTML = "Unable to retrieve your location";
 	    	  };
@@ -82,11 +71,8 @@
 
 				    			usersRef.set({
 									username: {
-										name: $("#username").val()
-									}
-								});
-
-								usersRef.set({
+										name: $("#username").val()							
+									},
 									location: { 
 										latitude: latitude,
 										longitude: longitude
@@ -130,6 +116,10 @@
 	        	$("#chat-buffer").append(html);
 	      	});
 
+
+	      	$("#tracker").click(function(){
+	      		setInterval(geoFindMe(setData), 2000);
+	      	})
 	    });
 		</script>
 	</head>
@@ -152,6 +142,7 @@
 		</p>
 		<input type="submit" id="submit">
 		<div id="out"></div>
+		<button id="tracker">Track Me</button> 
 	</body>
 </html>
 
