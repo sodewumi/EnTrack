@@ -39,7 +39,7 @@
        */
       /* global Firebase, google, $, _ */
       var transit = {
-        buses: {},
+        people: {},
         map: undefined,
         ref: undefined,
         $container: undefined,
@@ -148,7 +148,7 @@
             position: busLatLng,
             map: this.map
           });
-          this.buses[busId] = marker;
+          this.people[busId] = marker;
         },
         /**
          * createBusListeners
@@ -164,7 +164,7 @@
             });
           });
           systemRef.on("child_changed", function (snapshot) {
-            var busMarker = self.buses[snapshot.key()];
+            var busMarker = self.people[snapshot.key()];
             if (busMarker) {
               busMarker.animatedMoveTo(snapshot.val().lat, snapshot.val().lon);
             } else {
@@ -172,10 +172,10 @@
             }
           });
           systemRef.on("child_removed", function (snapshot) {
-            var busMarker = self.buses[snapshot.key()];
+            var busMarker = self.people[snapshot.key()];
             if (busMarker) {
               busMarker.setMap(null);
-              delete self.buses[snapshot.key()];
+              delete self.people[snapshot.key()];
             }
           });
         },
@@ -203,16 +203,7 @@
             state: 'CA',
             name: 'SF MUNI',
             zoom: 15
-          }, 
-          {
-              lat: 41.834781,
-              lon: -87.681198,
-              tag: 'ctabus',
-              city: 'Chicago',
-              state: 'IL',
-              name: 'CTA Bus',
-              zoom: 12
-                },]
+          }]
       };
       $(document).ready(function () {
         transit.init();
