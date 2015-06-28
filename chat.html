@@ -43,26 +43,28 @@
 	    			console.log("Login Failed!", error);
 	  			} else {
 	  				$("#userHeading").text($("#username").val());
-	    			var usersRef = ref.child("usernames");
+	    			var usersRef = ref.child("usernames").child(authData.uid);
 	    			console.log("Authenticated successfully with payload:", authData);
 	    			usersRef.set({
-						user: {
+						username : {
 							name: $("#username").val()
-							userid: authData.login
 						}
 					});
+
 					$("#username").hide();
-	    			$("#message").show();
 	    			$("#login").hide();
 	    			$("#logout").show();
-	    			$("#userHeading").text(authData.uid)
-	  			}
+	    			$("#message").show();
+	    			$("#userHeading").text($("#username").val());
+				}
 				});
 			});
 
 			$("#logout").click(function () {
 				ref.unauth();
 				$("#login").show();
+				$("#username").text("");
+				$("#username").show();
 				$("#logout").hide();
 			});
 		
