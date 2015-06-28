@@ -20,8 +20,10 @@
 	    	  function success(position) {
 	    	    latitude  = position.coords.latitude;
 	    	    console.log(latitude);
-	    	    // longitude = position.coords.longitude;
+	    	    longitude = position.coords.longitude;
 	    	  };
+
+	    	  console.log("here?" + latitude)
 
 	    	  function error() {
 	    	    output.innerHTML = "Unable to retrieve your location";
