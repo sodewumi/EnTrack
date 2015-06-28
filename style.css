@@ -19,7 +19,8 @@
     }
     .transit-opendata-example {
       height: 100%;
-      width: 100%;
+      width: 50%;
+      float: right;
     }
     #system-selector {
       position: fixed;
@@ -33,3 +34,14 @@
       padding: 0;
       overflow: hidden;
     }
+
+    #login {
+      float: right;
+    }
+    #logo {
+      float:left;
+    }
+/*
+    #chat {
+
+    }*/
