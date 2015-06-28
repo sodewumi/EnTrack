@@ -6,7 +6,7 @@
 	 	<script src="https://cdn.firebase.com/js/client/2.1.1/firebase.js"></script>
 		<script>
 	    $(document).ready(function () {
-	    	var coords = []
+
 	    	$("#logout").hide();
 	    	$("#message").hide();
 
@@ -21,7 +21,33 @@
 	    	  function success(position) {
 	    	    var latitude  = position.coords.latitude;
 	    	    var longitude = position.coords.longitude;
-	    	    coords = [latitude, longitude]
+	    	    console.log (latitude, longitude)
+
+	    	    function setData(latitude, longitude) {
+
+		    			usersRef.set({
+							username: {
+								name: $("#username").val()
+							}
+						});
+
+						usersRef.set({
+							location: { 
+								latitude: latitude
+								longitude: longitude
+							}
+							
+						});
+
+						$("#username").hide();
+		    			$("#login").hide();
+		    			$("#logout").show();
+		    			$("#message").show();
+		    			$("#userHeading").text($("#username").val());
+	    	    }
+	    	    
+	    	    setData(latitude,longitude)
+
 	    	  };
 
 	    	  // *******************************************
@@ -40,7 +66,6 @@
 
 	    	  output.innerHTML = "<p>Locating…</p>";
 	    	  navigator.geolocation.getCurrentPosition(success, error, {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000});
-	    	  console.log(coords)
 	    	};
 
 	    	function authDataCallback(authData) {
@@ -74,39 +99,15 @@
 	      	$("#login").click(function () {
 		      	ref.authWithOAuthPopup("github", function(error, authData) {
 	  				if (error) {
-	    			console.log("Login Failed!", error);
-	  			} else {
-	  				$("#userHeading").text($("#username").val());
-	    			var usersRef = ref.child("usernames").child(authData.uid);
-	    			console.log("Authenticated successfully with payload:", authData);
+		    			console.log("Login Failed!", error);
+		  			} else {
+		  				$("#userHeading").text($("#username").val());
+		    			var usersRef = ref.child("usernames").child(authData.uid);
+		    			console.log("Authenticated successfully with payload:", authData);
+		    			
+		    			geoFindMe();
 
-	    			
-	    			var lat = geoFindMe();
-	    			
-
-
-	    			usersRef.set({
-						username: {
-							name: $("#username").val()
-						}
-					});
-
-					usersRef.set({
-						location: { 
-							latitude: lat
-							// longitude: longitude
-						}
-						
-					});
-
-
-
-					$("#username").hide();
-	    			$("#login").hide();
-	    			$("#logout").show();
-	    			$("#message").show();
-	    			$("#userHeading").text($("#username").val());
-				}
+					}
 				});
 			});
 
