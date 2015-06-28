@@ -138,7 +138,7 @@
           var peopleRouteTail = people.routeTag.toString().slice(1);
           var tag = peopleRouteHead + peopleRouteTail;
           var marker = new google.maps.Marker({
-            icon: "http://www.clker.com/cliparts/q/I/W/7/I/r/3-colors-md.png" + tag + "|7094FF|eee",
+            icon: "https://chart.googleapis.com/chart?chst=d_bubble_icon_text_small&chld=bus|bbT|",
             position: peopleLatLng,
             map: this.map
           });
@@ -204,26 +204,6 @@
       });
 
     </script>
-
-    <script>
-      $(document).ready(function () {
-      var ref = new Firebase("https://dinosaurs.firebaseio.com/");
-      $("#submit").click(function () {
-        var username = $("#username").val();
-        var message = $("#message").val();
-        ref.child("messages").push({
-          username: username,
-          message: message
-        });
-      });
-      ref.child("messages").on("child_added", function (snapshot) {
-        var value = snapshot.val();
-        var html = $("<li/>").text(value.username + " said " + value.message);
-        $("#chat-buffer").append(html);
-      });
-    });
-    </script>
-
 
 
   </head>
