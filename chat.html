@@ -65,14 +65,13 @@
 					  };
 
 					  output.innerHTML = "<p>Locating…</p>";
-
 					  navigator.geolocation.getCurrentPosition(success, error, {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000});
 					};
 
 	    			usersRef.set({
 						username: {
 							name: $("#username").val()
-						}
+						},
 						location: {
 							lat: latitude
 							lon: longitude
