@@ -45,25 +45,22 @@
         $container: undefined,
         $system: undefined,
         /**
-         * init
-         *
-         * initialize the module
-         */
+         init - initialize the module
+         **/
         init: function () {
           this.$container = $(".transit-opendata-example");
           if (this.$container.length) {
             this.$system = $("#system-selector");
+            // will need to change this to our database!
             this.ref = new Firebase("https://publicdata-transit.firebaseio.com/");
-            this.animateBuses();
+            this.animatePeople();
             this.populateMap();
           }
         },
         /**
-         * animateBuses
-         *
-         * attach method to Google Maps Marker prototype to animate movement on data change
-         */
-        animateBuses: function () {
+         animatePeople - attach method to Google Maps Marker prototype to animate movement on data change
+         **/
+        animatePeople: function () {
           var self = this;
           google.maps.Marker.prototype.animatedMoveTo = function (toLat, toLng) {
             var fromLat = this.getPosition().lat();
@@ -81,27 +78,25 @@
               currentLng = fromLng + percent * (toLng - fromLng);
               frames.push(new google.maps.LatLng(currentLat, currentLng));
             }
-            self.moveBus(this, frames, 0, 25);
+            self.movePeople(this, frames, 0, 25);
           };
         },
         /**
-         * moveBus
+         * movePeople
          *
          * display frame by frame the bus's movement on the map
          */
-        moveBus: function (marker, latLngs, index, wait) {
+        movePeople: function (marker, latLngs, index, wait) {
           marker.setPosition(latLngs[index]);
           if (index !== latLngs.length - 1) {
             setTimeout(function () {
-              this.moveBus(marker, latLngs, index + 1, wait);
+              this.movePeople(marker, latLngs, index + 1, wait);
             }.bind(this), wait);
           }
         },
         /**
-         * populateMap
-         *
-         * listen for changes in UI and listen to transit firebase
-         */
+         * populateMap - listen for changes in UI and listen to transit firebase
+         **/
         populateMap: function () {
           var self = this;
           var systemRef;
@@ -126,18 +121,18 @@
             };
             self.map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
             systemRef = self.ref.child(name + "/vehicles").limitToLast(200);
-            self.createBusListeners(systemRef);
+            self.createPeopleListeners(systemRef);
           });
           this.$system.change();
         },
         /**
-         * newBus
+         * newPeople
          *
          * create a new bus marker on Google Maps element
          * @param {Object} bus - contains information about a transit system bus
          * @param {String} busId - the bus's ID in Firebase
          */
-        newBus: function (bus, busId) {
+        newPeople: function (bus, busId) {
           var busLatLng = new google.maps.LatLng(bus.lat, bus.lon);
           // CAPITALIZE THE FIRST LETTER OF BUS ROUTE STRING (if applicable, e.g., for the Brooklyn "B61" bus)
           var busRouteHead = bus.routeTag.toString()[0].toUpperCase();
@@ -151,16 +146,16 @@
           this.people[busId] = marker;
         },
         /**
-         * createBusListeners
+         * createPeopleListeners
          *
          * update the map when bus data changes
          * @param {Firebase Ref} systemRef - reference to the vehicles node under a transit system Firebase
          */
-        createBusListeners: function (systemRef) {
+        createPeopleListeners: function (systemRef) {
           var self = this;
           systemRef.once("value", function (snapshot) {
             snapshot.forEach(function (bus) {
-              self.newBus(bus.val(), bus.key());
+              self.newPeople(bus.val(), bus.key());
             });
           });
           systemRef.on("child_changed", function (snapshot) {
@@ -168,7 +163,7 @@
             if (busMarker) {
               busMarker.animatedMoveTo(snapshot.val().lat, snapshot.val().lon);
             } else {
-              self.newBus(snapshot.val(), snapshot.key());
+              self.newPeople(snapshot.val(), snapshot.key());
             }
           });
           systemRef.on("child_removed", function (snapshot) {
