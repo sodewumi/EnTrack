@@ -10,45 +10,14 @@
 	    	$("#logout").hide();
 	    	$("#message").hide();
 
-	    	function geoFindMe() {
+	    	function geoFindMe(success) {
 	    	  var output = document.getElementById("out");
 
 	    	  if (!navigator.geolocation){
 	    	    output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
 	    	    return;
 	    	  }
-
-	    	  function success(position) {
-	    	    var latitude  = position.coords.latitude;
-	    	    var longitude = position.coords.longitude;
-	    	    console.log (latitude, longitude)
-
-	    	    function setData(latitude, longitude) {
-
-		    			usersRef.set({
-							username: {
-								name: $("#username").val()
-							}
-						});
-
-						usersRef.set({
-							location: { 
-								latitude: latitude,
-								longitude: longitude
-							}
-							
-						});
-
-						$("#username").hide();
-		    			$("#login").hide();
-		    			$("#logout").show();
-		    			$("#message").show();
-		    			$("#userHeading").text($("#username").val());
-	    	    }
-	    	    
-	    	    setData(latitude,longitude)
-
-	    	  };
+	    
 
 	    	  // *******************************************
 	    	  //  HELLLLLLLP !
@@ -105,7 +74,33 @@
 		    			var usersRef = ref.child("usernames").child(authData.uid);
 		    			console.log("Authenticated successfully with payload:", authData);
 		    			
-		    			geoFindMe();
+			    	    function setData(position) {
+
+					    	    var latitude  = position.coords.latitude;
+					    	    var longitude = position.coords.longitude;
+					    	    console.log (latitude, longitude)
+
+				    			usersRef.set({
+									username: {
+										name: $("#username").val()
+									}
+								});
+
+								usersRef.set({
+									location: { 
+										latitude: latitude,
+										longitude: longitude
+									}
+									
+								});
+
+								$("#username").hide();
+				    			$("#login").hide();
+				    			$("#logout").show();
+				    			$("#message").show();
+				    			$("#userHeading").text($("#username").val());
+			    	    }
+		    			geoFindMe(setData);
 
 					}
 				});
