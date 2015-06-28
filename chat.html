@@ -9,6 +9,27 @@
 	    	$("#logout").hide();
 	    	$("#message").hide();
 
+	    	function geoFindMe() {
+	    	  var output = document.getElementById("out");
+
+	    	  if (!navigator.geolocation){
+	    	    output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
+	    	    return;
+	    	  }
+
+	    	  function success(position) {
+	    	    latitude  = position.coords.latitude;
+	    	    longitude = position.coords.longitude;
+	    	  };
+
+	    	  function error() {
+	    	    output.innerHTML = "Unable to retrieve your location";
+	    	  };
+
+	    	  output.innerHTML = "<p>Locating…</p>";
+	    	  navigator.geolocation.getCurrentPosition(success, error, {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000});
+	    	};
+
 	    	function authDataCallback(authData) {
 	    		if (authData) {
 	    			console.log("User" + authData.uid + " is logged in with " + authData.provider);
@@ -46,38 +67,20 @@
 	    			var usersRef = ref.child("usernames").child(authData.uid);
 	    			console.log("Authenticated successfully with payload:", authData);
 
-
-					function geoFindMe() {
-					  var output = document.getElementById("out");
-
-					  if (!navigator.geolocation){
-					    output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
-					    return;
-					  }
-
-					  function success(position) {
-					    latitude  = position.coords.latitude;
-					    longitude = position.coords.longitude;
-					  };
-
-					  function error() {
-					    output.innerHTML = "Unable to retrieve your location";
-					  };
-
-					  output.innerHTML = "<p>Locating…</p>";
-
-					  navigator.geolocation.getCurrentPosition(success, error, {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000});
-					};
+	    			geoFindMe();
 
 	    			usersRef.set({
 						username: {
 							name: $("#username").val()
 						}
-						location: {
-							lat: latitude
-							lon: longitude
-						}
 					});
+
+					usersRef.set({
+						latitude: latitude
+						longitude: longitude
+					});
+
+
 
 					$("#username").hide();
 	    			$("#login").hide();
