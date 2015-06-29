@@ -1,3 +1,8 @@
+body {
+  padding: 200px;
+  font: sans-serif;
+}
+
 #map-canvas {
         width: 500px;
         height: 400px;
@@ -18,15 +23,11 @@
       height: 100%;
     }
     .transit-opendata-example {
-      height: 100%;
+      height: 50%;
       width: 50%;
       float: right;
     }
-    #system-selector {
-      position: fixed;
-      top: 30px;
-      right: 10px;
-    }
+
     html, body {
       height: 100%;
       width: 100%;
@@ -35,16 +36,23 @@
       overflow: hidden;
     }
 
-    #login {
-      float: right;
-    }
+#headline {
+    background-color: #444444;
+    height: 30px;
+    padding-bottom: 10px;
+}
+.row {
+  padding-top: 10px;
+}
+
     #logo {
       float:left;
+      padding: 10px;
     }
-/*
-    #chat {
 
-    }*/
+    #chat {
+      padding-left: 20px;
+    }
 
     #top {
       width: 100%;

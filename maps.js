@@ -15,7 +15,7 @@
             output.innerHTML = "Unable to retrieve your location";
           };
 
-          output.innerHTML = "<p>Locating…</p>";
+          output.innerHTML = "";
           navigator.geolocation.getCurrentPosition(success, error, {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000});
         };
 
@@ -27,6 +27,7 @@
           } else {
             console.log("User is logged out");
             $("#login").show();
+            $("#logout").hide();
           }
         }
         

@@ -8,6 +8,7 @@
 <!--[if gt IE 8]><!-->
 <html class="no-js"> <!--<![endif]-->
   <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="style.css">
     
    
@@ -208,51 +209,62 @@
 
   </head>
   <body >
-    <div id="top">
-        <img id="logo" src="logo.gif">
+        <div class="row" id="headline"></div>
+        <div class="row">
+          <div class="col-md-6">
+            <div id="top">
+             <img id="logo" src="logo.gif" height="90px">
+          </div>
+          </div>
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-4">
+           <div id="log">
+             <input id="username" class="form-control" placeholder="username" type="text">
+             <button id="login" class="btn btn-default btn-sm" style="display: inline">Log in with GitHub</button>
+             <button id="logout" class="btn btn-default btn-sm" style="display: inline">Log out</button>
+           </div>
+           <div class="col-md-1">
+           </div>
+          </div>
+        </div>
+  
+  <hr>
 
-       <div id="login">
-         <p>
-         <input id="username" placeholder="username" type="text">
-         <button id="login">Log in with GitHub</button>
-         <button id="logout">Log out</button>
-         </p>
-       </div>
-    </div>
+          <div class="transit-opendata-example">
+            <h2>Where are my friends?</h2>
+            <div class="transit-map-canvas" data-example="transit" id="map-canvas"></div>
+             <button id="tracker" class="form-control btn">Track Me</button> 
+             
+          </div>
 
-    <div class="transit-opendata-example">
-      <div class="transit-map-canvas" data-example="transit" id="map-canvas"></div>
-      <select id="system-selector"></select>
-       <button id="tracker">Track Me</button> 
-    </div>
+          <!-- <p><button onclick="geoFindMe()">Show my location</button></p> -->
+          <div id="out"></div>
 
-    
+          <!-- chat-buffer = geodata-store -->
+          <div id="geodate-store">
+          </div>
 
-    <!-- <p><button onclick="geoFindMe()">Show my location</button></p> -->
-    <div id="out"></div>
+          <div id="chat">
+            <h2 id="userHeading">
+              Chat
+            </h2>
 
-    <!-- chat-buffer = geodata-store -->
-    <div id="geodate-store">
-    </div>
+            <ul id="chat-buffer">
+            </ul>
+            
+            <hr>
+            
+            <hr>
+            <p>
+              <input id="message" placeholder="message" type="text">
+            </p>
+            <input type="submit" id="submit">
+            <div id="out"></div>
+           
+          </div>
+          <select id="system-selector" class="display: none"></select>
 
-    <div id="chat">
-      <h2 id="userHeading">
-        Chat
-      </h2>
-
-      <ul id="chat-buffer">
-      </ul>
-      
-      <hr>
-      
-      <hr>
-      <p>
-        <input id="message" placeholder="message" type="text">
-      </p>
-      <input type="submit" id="submit">
-      <div id="out"></div>
-     
-    </div>
 
 
   </body>
