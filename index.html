@@ -1,3 +1,17 @@
+Skip to content
+This repository  
+Pull requests
+Issues
+Gist
+ @leskat47
+ Unwatch 4
+  Star 0
+  Fork 0
+sodewumi/EnTrack
+ branch: master  EnTrack/index.html
+@amp5amp5 3 days ago Committing updated files to github.
+1 contributor
+RawBlameHistory     271 lines (247 sloc)  9.722 kB
 <!DOCTYPE html>
 <!--[if lt IE 7]>
 <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -33,177 +47,91 @@
 
 <!-- realtime data JS -->
     <script>
-      /**
-       * transit.js  -  powering the transit open data example
-      /* global Firebase, google, $, _ */
-      var transit = {
-        people: {},
-        map: undefined,
-        ref: undefined,
-        $container: undefined,
-        $system: undefined,
-        /**
-         init - initialize the module
-         **/
-        init: function () {
-          this.$container = $(".transit-opendata-example");
-          if (this.$container.length) {
-            this.$system = $("#system-selector");
-            // 
-            // 
-            // will need to change this to our database!
-            // 
-            // 
-            this.ref = new Firebase("https://publicdata-transit.firebaseio.com/");
-            this.animatePeople();
-            this.populateMap();
-          }
-        },
-        /**
-         animatePeople - attach method to Google Maps Marker prototype to animate movement on data change
-         **/
-        animatePeople: function () {
-          var self = this;
-          google.maps.Marker.prototype.animatedMoveTo = function (toLat, toLng) {
-            var fromLat = this.getPosition().lat();
-            var fromLng = this.getPosition().lng();
-            var frames = [];
-            var isLocationSame = (self._areFloatsAlmostEqual(fromLat, toLat) && self._areFloatsAlmostEqual(fromLng, toLng));
-            var currentLat = 0.0;
-            var currentLng = 0.0;
-            if (isLocationSame) {
-              return;
-            }
-            // CREATE 200 ANIMATION FRAMES FOR BUS
-            for (var percent = 0; percent < 1; percent += 0.005) {
-              currentLat = fromLat + percent * (toLat - fromLat);
-              currentLng = fromLng + percent * (toLng - fromLng);
-              frames.push(new google.maps.LatLng(currentLat, currentLng));
-            }
-            self.movePeople(this, frames, 0, 25);
-          };
-        },
-        /**
-         * movePeople - display frame by frame the person's movement on the map
-         */
-        movePeople: function (marker, latLngs, index, wait) {
-          marker.setPosition(latLngs[index]);
-          if (index !== latLngs.length - 1) {
-            setTimeout(function () {
-              this.movePeople(marker, latLngs, index + 1, wait);
-            }.bind(this), wait);
-          }
-        },
-        /**
-         * populateMap - listen for changes in UI and listen to transit firebase
-         **/
-        populateMap: function () {
-          var self = this;
-          var systemRef;
-          var systemData;
-          _.forEach(this.transitSystems, function (systemData, sysId) {
-            this.$system.append($("<option value='" + sysId + "'>" + systemData.name + "</option>"));
-          }, this);
-          this.$system.change(function () {
-            var mapOptions;
-            var system = Number(self.$system.val());
-            var name = self.transitSystems[system].tag;
-            if (systemRef) {
-              systemRef.off();
-            }
-            mapOptions = {
-              center: new google.maps.LatLng(
-                  self.transitSystems[system].lat,
-                  self.transitSystems[system].lon
-              ),
-              zoom: self.transitSystems[system].zoom || 12,
-              mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            self.map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-            systemRef = self.ref.child(name + "/vehicles").limitToLast(200);
-            self.createPeopleListeners(systemRef);
-          });
-          this.$system.change();
-        },
-        /**
-         * newPeople
-         *
-         * create a new people marker on Google Maps element
-         * @param {Object} people - contains information about a transit system people
-         * @param {String} userId - the user's ID in Firebase
-         */
-        newPeople: function (people, userId) {
-          var peopleLatLng = new google.maps.LatLng(people.lat, people.lon);
-          // CAPITALIZE THE FIRST LETTER OF BUS ROUTE STRING (if applicable, e.g., for the Brooklyn "B61" people)
-          var peopleRouteHead = people.routeTag.toString()[0].toUpperCase();
-          var peopleRouteTail = people.routeTag.toString().slice(1);
-          var tag = peopleRouteHead + peopleRouteTail;
-          var marker = new google.maps.Marker({
-            icon: "https://chart.googleapis.com/chart?chst=d_map_pin_icon&chld=wc-female|00ADEF|eee",
-            position: peopleLatLng,
-            map: this.map
-          });
-          this.people[userId] = marker;
-        },
-        /**
-         * createPeopleListeners
-         *
-         * update the map when people data changes
-         * @param {Firebase Ref} systemRef - reference to the vehicles(?) node under a transit system Firebase
-         */
-        createPeopleListeners: function (systemRef) {
-          var self = this;
-          systemRef.once("value", function (snapshot) {
-            snapshot.forEach(function (people) {
-              self.newPeople(people.val(), people.key());
-            });
-          });
-          systemRef.on("child_changed", function (snapshot) {
-            var peopleMarker = self.people[snapshot.key()];
-            if (peopleMarker) {
-              peopleMarker.animatedMoveTo(snapshot.val().lat, snapshot.val().lon);
-            } else {
-              self.newPeople(snapshot.val(), snapshot.key());
-            }
-          });
-          systemRef.on("child_removed", function (snapshot) {
-            var peopleMarker = self.people[snapshot.key()];
-            if (peopleMarker) {
-              peopleMarker.setMap(null);
-              delete self.people[snapshot.key()];
-            }
-          });
-        },
-        /**
-         * _areFloatsAlmostEqual
-         *
-         * test to see if two floats in JS are functionally equal
-         * @param {Number} f1 - a number to compare
-         * @param {Number} f2 - a number to compare
-         * @param {Boolean} - whether the two floats are basically equal
-         */
-        _areFloatsAlmostEqual: function (f1, f2) {
-          return (Math.abs(f1 - f2) < 0.000001);
-        },
-        /**
-         * transitSystem -  listing of all transit systems in example
-         * TODO: Need to add in user's geolocation!
-         */
-        transitSystems: [
-          {
-            lat: 37.7789,
-            lon: -122.3917,
-            tag: 'sf-muni',
-            city: 'San Francisco',
-            state: 'CA',
-            // name: 'Party Time!',
-            zoom: 15
-          }]
-      };
-      $(document).ready(function () {
-        transit.init();
-      });
+    $(document).ready(function () {
+      
+        // Generate a Firebase location
+        var firebaseUrl = "https://enTrack.firebaseio.com/";
+        var firebaseRef = new Firebase(firebaseUrl);
 
+        // Set the URL of the link element to be the Firebase URL
+        document.getElementById("firebaseRef").setAttribute("href", firebaseUrl);
+
+        // Create a new GeoFire instance at the Firebase location
+        var geoFire = new GeoFire(firebaseRef);
+
+        /* Uses the HTML5 geolocation API to get the current user's location */
+        var getLocation = function() {
+          if (typeof navigator !== "undefined" && typeof navigator.geolocation !== "undefined") {
+            log("Asking user to get their location");
+            navigator.geolocation.getCurrentPosition(geolocationCallback, errorHandler);
+          } else {
+            log("Your browser does not support the HTML5 Geolocation API, so this map will not work.")
+          }
+        };
+
+        /* Callback method from the geolocation API which receives the current user's location */
+        var geolocationCallback = function(location) {
+          var latitude = location.coords.latitude;
+          var longitude = location.coords.longitude;
+          log("Retrieved user's location: [" + latitude + ", " + longitude + "]");
+
+          var username = document.getElementById("username").val();
+          geoFire.set(username, [latitude, longitude]).then(function() {
+            log("Current user " + username + "'s location has been added to GeoFire");
+
+            // When the user disconnects from Firebase (e.g. closes the app, exits the browser),
+            // remove their GeoFire entry
+            firebaseRef.child(username).onDisconnect().remove();
+
+            log("Added handler to remove user " + username + " from GeoFire when you leave this page.");
+            log("You can use the link above to verify that " + username + " was removed from GeoFire after you close this page.");
+          }).catch(function(error) {
+            log("Error adding user " + username + "'s location to GeoFire");
+          });
+        }
+
+        /* Handles any errors from trying to get the user's current location */
+        var errorHandler = function(error) {
+          if (error.code == 1) {
+            log("Error: PERMISSION_DENIED: User denied access to their location");
+          } else if (error.code === 2) {
+            log("Error: POSITION_UNAVAILABLE: Network is down or positioning satellites cannot be reached");
+          } else if (error.code === 3) {
+            log("Error: TIMEOUT: Calculating the user's location too took long");
+          } else {
+            log("Unexpected error code")
+          }
+        };
+
+        // Get the current user's location
+        getLocation();
+
+        /*************/
+        /*  HELPERS  */
+        /*************/
+        /* Returns a random string of the inputted length */
+        function generateRandomString(length) {
+            var text = "";
+            var validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            for(var i = 0; i < length; i++) {
+                text += validChars.charAt(Math.floor(Math.random() * validChars.length));
+            }
+
+            return text;
+        }
+
+        /* Logs to the page instead of the console */
+        function log(message) {
+          var childDiv = document.createElement("div");
+          var textNode = document.createTextNode(message);
+          childDiv.appendChild(textNode);
+          document.getElementById("log").appendChild(childDiv);
+        }
+      })();
+      
+
+      });
     </script>
 
 
