@@ -1,0 +1,45 @@
+<head>
+	<!-- CSS ===================== -->
+	<!-- load bootstrap -->
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"> 
+	<!--<style>
+	    body    { padding-top:30px; }
+	</style>-->
+
+	<!-- JS ===================== -->
+	<!-- load angular -->
+	<!-- <script src="http://code.angularjs.org/1.2.6/angular.js"></script> -->
+</head> 
+    
+<!-- http://localhost:8100/index_stella.html#/ -->
+    <!-- PAGE HEADER -->
+<div class="page-header"><h1>Make New Project</h1></div>
+
+	<!-- FORM -->
+	<!-- pass in the variable if our form is valid or invalid -->
+	<form name="userForm" ng-controller="TodoCtrl" ng-submit="submitForm(userForm.$valid)"> <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
+
+	<!-- NAME -->
+		<div class="form-group">
+			<label>Name</label>
+			<input type="text" name="name" class="form-control" ng-model="name" required>
+		</div>
+
+		<!-- PROJECT -->
+		<div class="form-group">
+			<label>Project</label>
+			<input type="text" name="project" class="form-control" ng-model="project">
+		</div>
+
+		<!-- SUBMIT BUTTON -->
+		<button type="submit" class="btn btn-primary">Submit</button>
+
+	</form>
+
+
+<!-- <form ng-submit="submit()" ng-controller="ExampleController">
+  Enter text and hit enter:
+  <input type="text" ng-model="text" name="text" />
+  <input type="submit" id="submit" value="Submit" />
+  <pre>list={{list}}</pre>
+</form> -->
